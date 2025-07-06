@@ -3,6 +3,7 @@ import { createData, updateData } from "../thunk/thunk";
 import { clearSelectedTodo } from "../features/todos/todoSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { hideForm } from "../features/form/formSlice";
+import { toast } from "react-toastify";
 
 const Form = () => {
   const [todoData, setTodoData] = useState({});
@@ -31,8 +32,10 @@ const Form = () => {
 
     if (selectedTodo) {
       dispatch(updateData(todoData));
+      toast.info("Task Update")
     } else {
       dispatch(createData(todoData));
+      toast.success("Task Created");
     }
     console.log(todoData);
     setTodoData({});

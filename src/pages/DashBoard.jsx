@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Form from "../components/Form";
 import { showForm } from "../features/form/formSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { HiSquare2Stack } from "react-icons/hi2";
 
 const DashBoard = () => {
   const [greetings, setGreetings] = useState("");
@@ -34,21 +35,13 @@ const DashBoard = () => {
     setCurrentDate(date.toLocaleDateString(undefined, options));
   }, []);
 
-  const handleCardView = () => {
-    navigate("/");
-  };
-
-  const handleTableView = () => {
-    navigate("/TaskTable");
-  };
-
   return (
     <>
       <main>
-        <section className="banner-section p-10 py">
+        <section className="banner-section p-10 bg-slate-50">
           <div className="grid grid-cols-3 gap-3">
             <div className="banner-item">
-              <div className="h-full bg-gradient-to-r from-blue-500 to-sky-500 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="h-full bg-gradient-to-r from-blue-500 to-sky-500 rounded-xl p-6 shadow-sm hover:shadow-xl transition-all duration-300">
                 <h2 className="text-4xl font-bold text-white">
                   {greetings} Rushabh
                 </h2>
@@ -62,25 +55,24 @@ const DashBoard = () => {
             </div>
             <div className="banner-item">
               <div className="quick-selection">
-                <div className="bg-white rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-xl transition-all duration-300">
                   <h2 className="text-xl font-bold mb-4 flex items-center">
                     <span className="w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
                     Quick Actions
                   </h2>
                   <div>
-                    <Link to={"/"}>
+                    <Link to={"/TaskTable"}>
                       <button className="w-full flex items-center justify-between p-3 mb-3 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors">
                         <span>Table View</span>
                         <FaTable />
                       </button>
                     </Link>
-                    <Link to={"/Cards"}>
+                    <Link to={"/"}>
                       <button
-                        onClick={handleCardView}
                         className="w-full flex items-center justify-between p-3 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 transition-colors"
                       >
                         <span>Card View</span>
-                        <FaTable />
+                        <HiSquare2Stack />
                       </button>
                     </Link>
                   </div>
@@ -115,9 +107,9 @@ const DashBoard = () => {
             </div>
           </div>
         </section>
-        <section className="flex justify-between items-center px-10 py-5">
+        <section className="flex justify-between items-center px-10 pb-5 bg-slate-50">
           <div className="title">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-sky-500 text-transparent bg-clip-text">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-sky-400 text-transparent bg-clip-text">
               Task List
             </h2>
           </div>
@@ -125,7 +117,7 @@ const DashBoard = () => {
           <div className="add-task">
             <button
               onClick={() => dispatch(showForm())}
-              className="flex items-center gap-x-2 bg-gradient-to-r from-blue-500 to-sky-500 text-white font-semibold py-2 px-5 rounded-lg cursor-pointer"
+              className="flex items-center gap-x-2 bg-gradient-to-r from-blue-500 to-sky-400 text-white font-semibold py-2 px-5 rounded-lg cursor-pointer"
             >
               Create Task <FaPlus />
             </button>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { HiMiniPencilSquare } from "react-icons/hi2";
 import { SiTicktick } from "react-icons/si";
@@ -6,10 +6,15 @@ import { SlCalender, SlClock } from "react-icons/sl";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteData, fetchData } from "../thunk/thunk";
 import { markTaskAsDone, setSelectedTodo } from "../features/todos/todoSlice";
+import { showForm } from "../features/form/formSlice";
+import { toast } from "react-toastify";
 
 const Cards = () => {
   const dispatch = useDispatch();
   const { todos } = useSelector((state) => state.todos);
+  const [priorityFilter, setPriorityFilter] = useState("All");
+  const [typeFilter, setTypeFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
 
   useEffect(() => {
     dispatch(fetchData());
@@ -19,6 +24,7 @@ const Cards = () => {
 
   const handleDelete = (id) => {
     dispatch(deleteData(id));
+    toast.error("Task Deleted")
   };
 
   // -------------- H A N D L E - U P D A T E -----------------
@@ -69,18 +75,83 @@ const Cards = () => {
         return "bg-black";
     }
   };
+
+  const filteredTodos = todos.filter((task) => {
+    const matchPriority =
+      priorityFilter === "All" || task.priority === priorityFilter;
+
+    const matchType = typeFilter === "All" || task.taskType === typeFilter;
+
+    const matchStatus =
+      statusFilter === "All" ||
+      (statusFilter === "Completed" && task.isDone) ||
+      (statusFilter === "Pending" && !task.isDone);
+
+    return matchPriority && matchType && matchStatus;
+  });
+
   return (
     <>
-      <section className="p-10">
+      <section className="p-10 bg-slate-50">
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={() => {
+              setPriorityFilter("All");
+              setTypeFilter("All");
+              setStatusFilter("All");
+            }}
+            className="p-2 px-4 bg-gradient-to-r from-blue-500 to-sky-400 text-sm rounded-md text-white font-medium cursor-pointer"
+          >
+            Clear All Filters
+          </button>
+
+          <div className="flex items-center gap-2">
+            <span>Sort By: </span>
+
+          <select
+            onChange={(e) => setPriorityFilter(e.target.value)}
+            value={priorityFilter}
+            className="p-2 rounded-md border border-gray-300 text-sm"
+          >
+            <option value="All">Priorities</option>
+            <option value="Critical">Critical</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+          <select
+            onChange={(e) => setTypeFilter(e.target.value)}
+            value={typeFilter}
+            className="p-2 rounded-md border border-gray-300 text-sm"
+          >
+            <option value="All">Types</option>
+            <option value="Operational">Operational</option>
+            <option value="Technical">Technical</option>
+            <option value="Strategic">Strategic</option>
+            <option value="Hiring">Hiring</option>
+            <option value="Financial">Financial</option>
+          </select>
+          <select
+            onChange={(e) => setStatusFilter(e.target.value)}
+            value={statusFilter}
+            className="p-2 rounded-md border border-gray-300 text-sm"
+          >
+            <option value="All">Status</option>
+            <option value=" Completed">Completed</option>
+            <option value=" Pending">Pending</option>
+          </select>
+          </div>
+        </div>
+
         <div className="task-item max-h-full">
-          {todos.length === 0 ? (
+          {filteredTodos.length === 0 ? (
             <p className="text-gray-500 text-center">No tasks assigned yet.</p>
           ) : (
             <ul className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {todos.map((task, index) => (
+              {filteredTodos.map((task, index) => (
                 <li
                   key={index}
-                  className={`relative p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 group ${getPriorityColor(
+                  className={`relative p-5 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 group ${getPriorityColor(
                     task.priority
                   )}`}
                 >
@@ -135,7 +206,7 @@ const Cards = () => {
                         <FaTrash />
                       </button>
                       <button
-                        onClick={() => handleUpdate(task.id)}
+                        onClick={() => handleUpdate(task)}
                         className="p-2 text-blue-500 bg-white hover:bg-blue-50 rounded-lg shadow-sm"
                         title="Edit Task"
                       >

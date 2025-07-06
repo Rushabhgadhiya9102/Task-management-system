@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import { deleteData, fetchData, updateData } from "../thunk/thunk";
 import { markTaskAsDone, setSelectedTodo } from "../features/todos/todoSlice";
-import { IoMdDoneAll } from "react-icons/io";
 import { HiMiniPencilSquare } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 import { FaTrash } from "react-icons/fa";
 import { showForm } from "../features/form/formSlice";
 import { SiTicktick } from "react-icons/si";
+import { toast } from "react-toastify";
 
 const TaskTable = () => {
   const dispatch = useDispatch();
   const { todos } = useSelector((state) => state.todos);
   const [selectedRow, setSelectedRow] = useState("");
+  const [textFilter, setTextFilter] = useState("");
+  const searchRef = useRef();
 
   useEffect(() => {
     dispatch(fetchData());
@@ -22,6 +24,7 @@ const TaskTable = () => {
 
   const handleDelete = (id) => {
     dispatch(deleteData(id));
+    toast.error('Task Delete')
   };
 
   // -------------- H A N D L E - U P D A T E -----------------
@@ -39,6 +42,7 @@ const TaskTable = () => {
     if (taskToUpdate) {
       dispatch(updateData({ ...taskToUpdate, isDone: true }));
     }
+    toast.success("Task Completed")
   };
 
   const getPriorityColor = (priority) => {
@@ -100,7 +104,9 @@ const TaskTable = () => {
     },
     {
       name: "Type",
-      selector: (row) => <span className={getTypeColor(row.taskType)}>{row.taskType}</span>,
+      selector: (row) => (
+        <span className={getTypeColor(row.taskType)}>{row.taskType}</span>
+      ),
       sortable: true,
     },
     {
@@ -152,7 +158,6 @@ const TaskTable = () => {
       style: {
         color: "black",
         fontSize: "14px",
-        fontWeight:""
       },
     },
     rows: {
@@ -162,47 +167,71 @@ const TaskTable = () => {
         },
         "&:nth-of-type(even)": {
           backgroundColor: "white",
-        }
+        },
+        padding:"30px 0px"
       },
     },
   };
 
+  // ---------------- search ---------------------
+
+  const taskSearch = todos.filter(
+    (item) =>
+      item.description?.toLowerCase()?.includes(textFilter.toLowerCase()) ||
+      item.taskType?.toLowerCase()?.includes(textFilter.toLowerCase())
+  );
+
   return (
     <>
-      <section className="datable px-10 py-5">
-        <DataTable
-          columns={columns}
-          data={todos}
-          customStyles={customStyle}
-          pagination
-          selectableRows
-          highlightOnHover
-          pointerOnHover
-          responsive
-          scrollable={true}
-          onSelectedRowsChange={(e) => {
-            setSelectedRow(e.selectedRows);
-          }}
-        />
+      <section className="datable px-10 py-5 bg-sky-50">
+        <div className="p-5 bg-white rounded-2xl">
+          <div className="flex mb-5"> 
+            <input
+            type="search"
+            placeholder="search"
+            onChange={(e) => setTextFilter(e.target.value)}
+            value={textFilter}
+            ref={searchRef}
+            className="border border-gray-300 py-1 px-2 rounded-full w-100 mx-auto"
+          />
+          </div>
 
-        <button
-          className="p-1.5 text-red-500 hover:bg-red-100 rounded-lg cursor-pointer"
-          onClick={() => {
-            selectedRow.map((row) => handleDelete(row.id));
-            setSelectedRow("");
-          }}
-        >
-          <FaTrash size={20} />
-        </button>
-        <button
-          className="p-1.5 text-green-500 hover:bg-green-100 rounded-lg cursor-pointer"
-          onClick={() => {
-            selectedRow.map((row) => handleTaskDone(row.id));
-            setSelectedRow("");
-          }}
-        >
-          <SiTicktick size={20} />
-        </button>
+          <DataTable
+            columns={columns}
+            data={taskSearch}
+            customStyles={customStyle}
+            pagination
+            selectableRows
+            highlightOnHover
+            pointerOnHover
+            responsive
+            scrollable={true}
+            onSelectedRowsChange={(e) => {
+              setSelectedRow(e.selectedRows);
+            }}
+          />
+
+          <button
+            className="p-1.5 text-red-500 hover:bg-red-100 rounded-lg cursor-pointer"
+            onClick={() => {
+              selectedRow.map((row) => handleDelete(row.id));
+              setSelectedRow("");
+              selectedRow("");
+            }}
+          >
+            <FaTrash size={20} />
+          </button>
+          <button
+            className="p-1.5 text-green-500 hover:bg-green-100 rounded-lg cursor-pointer"
+            onClick={() => {
+              selectedRow.map((row) => handleTaskDone(row.id));
+              setSelectedRow("");
+              selectedRow("");
+            }}
+          >
+            <SiTicktick size={20} />
+          </button>
+        </div>
       </section>
     </>
   );
