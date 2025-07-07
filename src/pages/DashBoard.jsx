@@ -3,10 +3,13 @@ import { FaPlus, FaTable } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import Form from "../components/Form";
 import { showForm } from "../features/form/formSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { HiSquare2Stack } from "react-icons/hi2";
 
 const DashBoard = () => {
+
+  // ------------- S T A T E S - A N D - S E L E C T O R S ----------------
+
   const [greetings, setGreetings] = useState("");
   const [currentDay, setCurrentDay] = useState("");
   const [currentDate, setCurrentDate] = useState("");
@@ -14,7 +17,7 @@ const DashBoard = () => {
   const dispatch = useDispatch();
   const { todos } = useSelector((state) => state.todos);
   const hideForm = useSelector((state) => state.form.show);
-  const navigate = useNavigate();
+
 
   //   ------------- S E T - C U R R E N T - D A T E - A N D - D A Y -----------------
 
@@ -40,6 +43,9 @@ const DashBoard = () => {
       <main>
         <section className="banner-section p-10 bg-slate-50">
           <div className="grid grid-cols-3 gap-3">
+
+            {/* ------------ G R E E T I N G S - S E C T I O N ---------------- */}
+
             <div className="banner-item">
               <div className="h-full bg-gradient-to-r from-blue-500 to-sky-500 rounded-xl p-6 shadow-sm hover:shadow-xl transition-all duration-300">
                 <h2 className="text-4xl font-bold text-white">
@@ -53,6 +59,9 @@ const DashBoard = () => {
                 </p>
               </div>
             </div>
+
+            {/* ------------ Q U I C K - L I N K S - S E C T I O N ---------------- */}
+
             <div className="banner-item">
               <div className="quick-selection">
                 <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-xl transition-all duration-300">
@@ -78,6 +87,9 @@ const DashBoard = () => {
                   </div>
                 </div>
               </div>
+
+            {/* ------------- T O T A L - T A S K - S E C T I O N ---------------- */}
+
             </div>
             <div className="banner-item">
               <div className="grid grid-cols-2 gap-3 h-full">
@@ -107,6 +119,9 @@ const DashBoard = () => {
             </div>
           </div>
         </section>
+
+        {/* -------------- T O D O - L I S T - S E C T I O N ---------------- */}
+
         <section className="flex justify-between items-center px-10 pb-5 bg-slate-50">
           <div className="title">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-sky-400 text-transparent bg-clip-text">

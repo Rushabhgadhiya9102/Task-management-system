@@ -10,11 +10,16 @@ import { showForm } from "../features/form/formSlice";
 import { toast } from "react-toastify";
 
 const Cards = () => {
+
+  // ------------- S T A T E S - A N D - S E L E C T O R S ----------------
+
   const dispatch = useDispatch();
   const { todos } = useSelector((state) => state.todos);
   const [priorityFilter, setPriorityFilter] = useState("All");
   const [typeFilter, setTypeFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
+
+  // ------------- U S E - E F F E C T ----------------
 
   useEffect(() => {
     dispatch(fetchData());
@@ -33,7 +38,7 @@ const Cards = () => {
     dispatch(setSelectedTodo(todo));
     dispatch(showForm());
   };
-  // ------------ task done -----------------
+  // ------------ H A N D L E - T A S K - D O N E -----------------
 
   const handleTaskDone = (taskId) => {
     dispatch(markTaskAsDone(taskId));
@@ -43,6 +48,8 @@ const Cards = () => {
       dispatch(updateData({ ...taskToUpdate, isDone: true }));
     }
   };
+
+  // ------------ C O L O R - C H A N G E - O N - P R I O R I T Y ----------------
 
   const getPriorityColor = (priority) => {
     switch (priority) {
@@ -58,6 +65,8 @@ const Cards = () => {
         return "bg-gray-100 text-gray-600";
     }
   };
+
+  // ----------- C O L O R - C H A N G E - O N - T A S K - S T A T U S ----------------
 
   const getTypeColor = (type) => {
     switch (type) {
@@ -76,6 +85,8 @@ const Cards = () => {
     }
   };
 
+  // --------------- S O R T I N G - T A S K S ----------------
+
   const filteredTodos = todos.filter((task) => {
     const matchPriority =
       priorityFilter === "All" || task.priority === priorityFilter;
@@ -93,6 +104,9 @@ const Cards = () => {
   return (
     <>
       <section className="p-10 bg-slate-50">
+
+      {/* --------------- S O R T I N G - T A S K S ---------------- */}
+
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => {
@@ -111,7 +125,7 @@ const Cards = () => {
           <select
             onChange={(e) => setPriorityFilter(e.target.value)}
             value={priorityFilter}
-            className="p-2 rounded-md border border-gray-300 text-sm"
+            className="p-2 rounded-md border bg-white border-gray-300 text-sm"
           >
             <option value="All">Priorities</option>
             <option value="Critical">Critical</option>
@@ -122,7 +136,7 @@ const Cards = () => {
           <select
             onChange={(e) => setTypeFilter(e.target.value)}
             value={typeFilter}
-            className="p-2 rounded-md border border-gray-300 text-sm"
+            className="p-2 rounded-md border bg-white border-gray-300 text-sm"
           >
             <option value="All">Types</option>
             <option value="Operational">Operational</option>
@@ -134,7 +148,7 @@ const Cards = () => {
           <select
             onChange={(e) => setStatusFilter(e.target.value)}
             value={statusFilter}
-            className="p-2 rounded-md border border-gray-300 text-sm"
+            className="p-2 rounded-md border bg-white border-gray-300 text-sm"
           >
             <option value="All">Status</option>
             <option value=" Completed">Completed</option>
@@ -142,6 +156,8 @@ const Cards = () => {
           </select>
           </div>
         </div>
+
+        {/* --------------- T A S K - L I S T --------------- */}
 
         <div className="task-item max-h-full">
           {filteredTodos.length === 0 ? (

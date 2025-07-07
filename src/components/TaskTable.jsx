@@ -10,11 +10,16 @@ import { SiTicktick } from "react-icons/si";
 import { toast } from "react-toastify";
 
 const TaskTable = () => {
+
+  // -------------- S T A T E S - A N D - S E L E C T O R S ----------------
+
   const dispatch = useDispatch();
   const { todos } = useSelector((state) => state.todos);
   const [selectedRow, setSelectedRow] = useState("");
   const [textFilter, setTextFilter] = useState("");
   const searchRef = useRef();
+
+  // ---------------- U S E - E F F E C T ----------------
 
   useEffect(() => {
     dispatch(fetchData());
@@ -33,7 +38,7 @@ const TaskTable = () => {
     dispatch(setSelectedTodo(todo));
     dispatch(showForm());
   };
-  // ------------ task done -----------------
+  // ------------ H A N D L E - T A S K - D O N E -----------------
 
   const handleTaskDone = (taskId) => {
     dispatch(markTaskAsDone(taskId));
@@ -44,6 +49,8 @@ const TaskTable = () => {
     }
     toast.success("Task Completed")
   };
+
+  // ------------ C O L O R - C H A N G E - O N - P R I O R I T Y ----------------
 
   const getPriorityColor = (priority) => {
     switch (priority) {
@@ -62,6 +69,8 @@ const TaskTable = () => {
     }
   };
 
+  // ----------- C O L O R - C H A N G E - O N - T A S K - S T A T U S ----------------
+
   const getTypeColor = (type) => {
     switch (type) {
       case "Operational":
@@ -79,7 +88,7 @@ const TaskTable = () => {
     }
   };
 
-  // ------------- table columns --------------
+  // ------------- T A B L E - C O L U M N S --------------
 
   const columns = [
     {
@@ -144,7 +153,7 @@ const TaskTable = () => {
     },
   ];
 
-  //   ---------- table style and data -----------------
+  //   ---------- T A B L E - C U S T O M - S T Y L E S -----------------
 
   const customStyle = {
     headCells: {
@@ -173,7 +182,7 @@ const TaskTable = () => {
     },
   };
 
-  // ---------------- search ---------------------
+  // ---------------- S E A R C H ---------------------
 
   const taskSearch = todos.filter(
     (item) =>
@@ -185,6 +194,9 @@ const TaskTable = () => {
     <>
       <section className="datable px-10 py-5 bg-sky-50">
         <div className="p-5 bg-white rounded-2xl">
+
+          {/* ---------- S E A R C H - B A R ---------- */}
+
           <div className="flex mb-5"> 
             <input
             type="search"
@@ -195,6 +207,8 @@ const TaskTable = () => {
             className="border border-gray-300 py-1 px-2 rounded-full w-100 mx-auto"
           />
           </div>
+
+          {/* ------------ D A T A - T A B L E ------------ */}
 
           <DataTable
             columns={columns}
@@ -210,6 +224,8 @@ const TaskTable = () => {
               setSelectedRow(e.selectedRows);
             }}
           />
+
+            {/* --------- D A T A - T A B L E - F O O T E R ---------- */}
 
           <button
             className="p-1.5 text-red-500 hover:bg-red-100 rounded-lg cursor-pointer"

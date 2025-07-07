@@ -6,12 +6,16 @@ import {
   updateData,
 } from "../../thunk/thunk";
 
+// ----------- I N I T I A L S - S T A T E -----------
+
 const initialState = {
   todos: [],
   selectedTodo: null,
   loading: false,
   error: false,
 };
+
+// ----------- S L I C E - C R E A T E -----------
 
 const todoSlice = createSlice({
   name: "todos",
